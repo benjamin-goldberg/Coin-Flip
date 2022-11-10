@@ -28,13 +28,13 @@ contract CoinFlip is Ownable {
     }
 
     function NewGame() external payable {
-        require(msg.value >= 0.0001 ether);
+        require(msg.value >= 0.00001 ether);
         Games.push(Game(msg.sender, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000));
         StartingGame = StartingGame.add(1);
     }
 
     function FillGame(uint _GameNum) external payable {
-        require(msg.value == Games[_GameNum].Stake);
+        require(uint(msg.value) == Games[_GameNum].Stake);
         require(Games[_GameNum].Filled == false);
         randomNonce.add(1);
         uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce, _GameNum, Games[_GameNum].Player1))).mod(100);
