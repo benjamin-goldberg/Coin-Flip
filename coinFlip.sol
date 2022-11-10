@@ -31,14 +31,14 @@ contract CoinFlip is Ownable {
     }
 
     function NewGame() external payable {
-        require(msg.value >= 0.00001 ether);
+        require(msg.value >= 0.00001 ether, "Too small of an amount.");
         Games.push(Game(StartingGame, msg.sender, msg.value, 0x0000000000000000000000000000000000000000, false, 0x0000000000000000000000000000000000000000, 0, 0));
         StartingGame = StartingGame.add(1);
     }
 
     function FillGame(uint _GameNum) external payable {
-        require(uint(msg.value) == Games[_GameNum].Stake);
-        require(Games[_GameNum].Filled == false);
+        require(uint(msg.value) == Games[_GameNum].Stake, "You must send the same amount of ETH as the other player.");
+        require(Games[_GameNum].Filled == false, "This game has already been filled.");
         Games[_GameNum].Player2 = msg.sender;
         randomNonce.add(1);
         uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce, _GameNum, Games[_GameNum].Player1))).mod(100);
