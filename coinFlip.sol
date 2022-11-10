@@ -15,10 +15,12 @@ contract CoinFlip is Ownable {
 
     struct Game {
         address Player1;
+        address Player2;
         uint GameNum;
         uint Stake;
         bool Filled;
         address Winner;
+        uint AmountWon;
     }
 
     Game[] public Games;
@@ -29,13 +31,14 @@ contract CoinFlip is Ownable {
 
     function NewGame() external payable {
         require(msg.value >= 0.00001 ether);
-        Games.push(Game(msg.sender, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000));
+        Games.push(Game(msg.sender, 0x0000000000000000000000000000000000000000, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000, 0));
         StartingGame = StartingGame.add(1);
     }
 
     function FillGame(uint _GameNum) external payable {
         require(uint(msg.value) == Games[_GameNum].Stake);
         require(Games[_GameNum].Filled == false);
+        Games[_GameNum].Player2 = msg.sender;
         randomNonce.add(1);
         uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce, _GameNum, Games[_GameNum].Player1))).mod(100);
         if (random >= 50) {
@@ -45,6 +48,7 @@ contract CoinFlip is Ownable {
             payable(address(Games[_GameNum].Player1)).transfer(msg.value.mul(2).mul(98).div(100));
             Games[_GameNum].Winner = Games[_GameNum].Player1;
         }
+        Games[_GameNum].AmountWon = msg.value.mul(2).mul(98).div(100);
         Games[_GameNum].Filled = true;
     }
 
