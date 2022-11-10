@@ -56,10 +56,10 @@ contract CoinFlip is Ownable {
             Games[_GameNum].WinningSide = "Heads";
         }
         if (uint(keccak256(abi.encodePacked(Games[_GameNum].WinningSide))) == uint(keccak256(abi.encodePacked(Games[_GameNum].Player2Side)))) {
-            payable(address(msg.sender)).transfer(msg.value.mul(2).mul(98).div(100));
+            payable(msg.sender).transfer(msg.value.mul(2).mul(98).div(100));
             Games[_GameNum].Winner = msg.sender;
         } else {
-            payable(address(Games[_GameNum].Player1)).transfer(msg.value.mul(2).mul(98).div(100));
+            payable(Games[_GameNum].Player1).transfer(msg.value.mul(2).mul(98).div(100));
             Games[_GameNum].Winner = Games[_GameNum].Player1;
         }
         Games[_GameNum].AmountWon = msg.value.mul(2).mul(98).div(100);
