@@ -21,6 +21,7 @@ contract CoinFlip is Ownable {
         bool Filled;
         address Winner;
         uint AmountWon;
+        uint WinningNumber;
     }
 
     Game[] public Games;
@@ -31,7 +32,7 @@ contract CoinFlip is Ownable {
 
     function NewGame() external payable {
         require(msg.value >= 0.00001 ether);
-        Games.push(Game(msg.sender, 0x0000000000000000000000000000000000000000, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000, 0));
+        Games.push(Game(msg.sender, 0x0000000000000000000000000000000000000000, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000, 0, 0));
         StartingGame = StartingGame.add(1);
     }
 
@@ -48,6 +49,7 @@ contract CoinFlip is Ownable {
             payable(address(Games[_GameNum].Player1)).transfer(msg.value.mul(2).mul(98).div(100));
             Games[_GameNum].Winner = Games[_GameNum].Player1;
         }
+        Games[_GameNum].WinningNumber = random;
         Games[_GameNum].AmountWon = msg.value.mul(2).mul(98).div(100);
         Games[_GameNum].Filled = true;
     }
