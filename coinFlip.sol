@@ -29,8 +29,8 @@ contract CoinFlip is Ownable {
 
     function NewGame() external payable {
         require(msg.value >= 0.0001 ether);
-        StartingGame = StartingGame.add(1);
         Games.push(Game(msg.sender, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000));
+        StartingGame = StartingGame.add(1);
     }
 
     function FillGame(uint _GameNum) external payable {
