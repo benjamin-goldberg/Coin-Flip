@@ -18,6 +18,7 @@ contract CoinFlipper is Ownable {
         uint GameNum;
         uint Stake;
         bool Filled;
+        address Winner;
     }
 
     Game[] public Games;
@@ -30,7 +31,7 @@ contract CoinFlipper is Ownable {
         require(msg.value == _stake);
         require(msg.value >= 0.0001 ether);
         StartingGame = StartingGame.add(1);
-        Games.push(Game(msg.sender, StartingGame, msg.value, false));
+        Games.push(Game(msg.sender, StartingGame, msg.value, false, 0x0000000000000000000000000000000000000000));
     }
 
     function FillGame(uint _GameNum) external payable {
@@ -40,9 +41,11 @@ contract CoinFlipper is Ownable {
         uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce, _GameNum, Games[_GameNum].Player1))).mod(100);
         if (random >= 50) {
             payable(address(msg.sender)).transfer(msg.value.mul(2).mul(98).div(100));
+            Games[_GameNum].Winner = msg.sender;
         } else {
             
             payable(address(Games[_GameNum].Player1)).transfer(msg.value.mul(2).mul(98).div(100));
+            Games[_GameNum].Winner = Games[_GameNum].Player1;
         }
         Games[_GameNum].Filled = true;
     }
