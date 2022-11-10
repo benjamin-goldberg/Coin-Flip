@@ -42,7 +42,6 @@ contract CoinFlip is Ownable {
             payable(address(msg.sender)).transfer(msg.value.mul(2).mul(98).div(100));
             Games[_GameNum].Winner = msg.sender;
         } else {
-            
             payable(address(Games[_GameNum].Player1)).transfer(msg.value.mul(2).mul(98).div(100));
             Games[_GameNum].Winner = Games[_GameNum].Player1;
         }
