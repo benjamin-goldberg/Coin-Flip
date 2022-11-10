@@ -16,8 +16,10 @@ contract CoinFlip is Ownable {
     struct Game {
         uint GameNum;
         address Player1;
+        string Player1Side;
         uint Stake;
         address Player2;
+        string Player2Side;
         bool Filled;
         address Winner;
         uint AmountWon;
@@ -30,9 +32,10 @@ contract CoinFlip is Ownable {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function NewGame() external payable {
+    function NewGame(string memory _HeadsOrTails) external payable {
         require(msg.value >= 0.00001 ether, "Too small of an amount.");
-        Games.push(Game(StartingGame, msg.sender, msg.value, 0x0000000000000000000000000000000000000000, false, 0x0000000000000000000000000000000000000000, 0, 0));
+        require(uint(keccak256(abi.encodePacked(_HeadsOrTails))) == uint(keccak256(abi.encodePacked("Heads"))) || uint(keccak256(abi.encodePacked("Tails"))) == uint(keccak256(abi.encodePacked(_HeadsOrTails))), "You must pick Heads or Tails.");
+        Games.push(Game(StartingGame, msg.sender, _HeadsOrTails, msg.value, 0x0000000000000000000000000000000000000000, "0", false, 0x0000000000000000000000000000000000000000, 0, 0));
         StartingGame = StartingGame.add(1);
     }
 
@@ -40,6 +43,11 @@ contract CoinFlip is Ownable {
         require(uint(msg.value) == Games[_GameNum].Stake, "You must send the same amount of ETH as the other player.");
         require(Games[_GameNum].Filled == false, "This game has already been filled.");
         Games[_GameNum].Player2 = msg.sender;
+        if (uint(keccak256(abi.encodePacked(Games[_GameNum].Player1Side))) == uint(keccak256(abi.encodePacked("Heads")))) {
+            Games[_GameNum].Player2Side = "Tails";
+        } else {
+            Games[_GameNum].Player2Side = "Heads";
+        }
         randomNonce.add(1);
         uint random = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce, _GameNum, Games[_GameNum].Player1))).mod(100);
         if (random >= 50) {
