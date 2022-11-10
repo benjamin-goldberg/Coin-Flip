@@ -6,7 +6,7 @@ pragma solidity ^0.8.13;
 import "./Ownable.sol";
 import "./SafeMath.sol";
 
-contract CoinFlipper is Ownable {
+contract CoinFlip is Ownable {
 
     using SafeMath for uint;
 
