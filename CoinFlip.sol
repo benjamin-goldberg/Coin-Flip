@@ -27,6 +27,10 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
         s_subscriptionId = subscriptionId;
     }
 
+    function changeGasLimit(uint32 _newGasLimit) external onlyContractOwner {
+        callbackGasLimit = _newGasLimit;
+    }
+
     function _requestRandomWords(uint _gameNum) internal returns (uint256 requestId) {
         requestId = COORDINATOR.requestRandomWords(
             keyHash,
