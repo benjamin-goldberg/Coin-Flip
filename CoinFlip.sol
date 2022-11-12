@@ -11,17 +11,11 @@ import './ConfirmedOwner.sol';
 
 contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
 
-    struct RequestStatus {
-        bool fulfilled; // whether the request has been successfully fulfilled
-        bool exists; // whether a requestId exists
-        uint256[] randomWords;
-    }
-    mapping(uint256 => RequestStatus) public s_requests; /* requestId --> requestStatus */
     VRFCoordinatorV2Interface COORDINATOR;
 
     uint64 s_subscriptionId;
     bytes32 keyHash = 0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
-    uint32 callbackGasLimit = 200000;
+    uint32 callbackGasLimit = 300000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 1;
 
@@ -41,16 +35,13 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
             callbackGasLimit,
             numWords
         );
-        s_requests[requestId] = RequestStatus({randomWords: new uint256[](0), exists: true, fulfilled: false});
         Games[_gameNum].randomId = requestId;
         Games[_gameNum].randomIdExists = true;
         return requestId;
     }
 
     function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
-        require(s_requests[_requestId].exists, 'request not found');
-        s_requests[_requestId].fulfilled = true;
-        s_requests[_requestId].randomWords = _randomWords;
+        require(Games[_requestId].randomIdExists = true, 'Request not found');
         Games[_requestId].randomNum = _randomWords;
         Games[_requestId].randomFulfilled = true;
     }
