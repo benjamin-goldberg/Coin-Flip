@@ -60,8 +60,7 @@ contract CoinFlip is Ownable, RandomOracle {
             numWords
         );
     }
-
-/*
+    
     function flipGame(uint _gameNum) external {
         require(Games[_gameNum].randomFulfilled == true);
         Games[_gameNum].roll = Games[_gameNum].randomNum[0].mod(100);
