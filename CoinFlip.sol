@@ -112,14 +112,14 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
             Games[_gameNum].winningSide = "Heads";
         }
         if ((uint(keccak256(abi.encodePacked(Games[_gameNum].winningSide))) == (uint(keccak256(abi.encodePacked(Games[_gameNum].player1Side)))))) {
-            payable(Games[_gameNum].player1).transfer(msg.value.mul(2).mul(98).div(100));
+            payable(Games[_gameNum].player1).transfer(Games[_gameNum].stake.mul(2).mul(98).div(100));
             Games[_gameNum].winner = Games[_gameNum].player2;
         } else {
-            payable(Games[_gameNum].player2).transfer(msg.value.mul(2).mul(98).div(100));
+            payable(Games[_gameNum].player2).transfer(Games[_gameNum].stake.mul(2).mul(98).div(100));
             Games[_gameNum].winner = Games[_gameNum].player2;
         }
         
-        Games[_gameNum].amountWon = msg.value.mul(2).mul(98).div(100);
+        Games[_gameNum].amountWon = Games[_gameNum].stake.mul(2).mul(98).div(100);
     }
 
 } 
