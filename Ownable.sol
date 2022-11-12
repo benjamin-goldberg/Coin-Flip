@@ -20,7 +20,7 @@ import "./Context.sol";
 abstract contract Ownable is Context {
     address private _owner;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event ContractOwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
@@ -78,6 +78,6 @@ abstract contract Ownable is Context {
     function _transferContractOwnership(address newOwner) internal virtual {
         address oldOwner = _owner;
         _owner = newOwner;
-        emit OwnershipTransferred(oldOwner, newOwner);
+        emit ContractOwnershipTransferred(oldOwner, newOwner);
     }
 }
