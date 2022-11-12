@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 
+//testing
+
 pragma solidity ^0.8.13;
 
 
@@ -106,7 +108,7 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
         address Winner;
         uint AmountWon;
         string WinningSide;
-        
+
     }
 
     Game[] public Games;
