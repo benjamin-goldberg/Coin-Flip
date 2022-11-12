@@ -5,6 +5,7 @@ pragma solidity ^0.8.13;
 
 import "./Ownable.sol";
 import "./SafeMath.sol";
+import "./VRFv2Consumer.sol";
 
 contract CoinFlip is Ownable {
 
@@ -73,5 +74,3 @@ contract CoinFlip is Ownable {
     }
 
 } 
-
-// Ben was here
