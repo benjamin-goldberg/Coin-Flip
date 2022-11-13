@@ -15,6 +15,7 @@ struct RequestStatus {
         bool fulfilled; // whether the request has been successfully fulfilled
         bool exists; // whether a requestId exists
         uint256[] randomWords;
+        uint gameNum;
     }
     mapping(uint256 => RequestStatus) public s_requests;
 
@@ -52,7 +53,6 @@ struct RequestStatus {
     }
 
     function _requestRandomWords(uint _gameNum) internal returns (uint256 requestId) {
-        // Will revert if subscription is not set and funded.
         requestId = COORDINATOR.requestRandomWords(
             keyHash,
             s_subscriptionId,
@@ -60,8 +60,9 @@ struct RequestStatus {
             callbackGasLimit,
             numWords
         );
-        s_requests[requestId] = RequestStatus({randomWords: new uint256[](0), exists: true, fulfilled: false});
+        s_requests[requestId] = RequestStatus({randomWords: new uint256[](0), exists: true, fulfilled: false, gameNum: _gameNum});
         Games[_gameNum].randomIdExists = true;
+        Games[_gameNum].randomId = requestId;
         return requestId;
     }
 
@@ -151,7 +152,8 @@ struct RequestStatus {
     }
 
     function flipGame(uint _gameNum) external {
-        require(Games[_gameNum].randomFulfilled == true);
+        require(s_requests[_gameNum].fulfilled = true);
+        s_requests[_gameNum].randomWords = Games[_gameNum].randomNum;
         Games[_gameNum].roll = Games[_gameNum].randomNum[0].mod(100);
          if (Games[_gameNum].roll >= 50) {
             Games[_gameNum].winningSide = "Tails";
