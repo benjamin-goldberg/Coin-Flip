@@ -89,10 +89,10 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
 
     function flipGame(uint32 _gameNum) external {
         require(s_requests[_gameNum].fulfilled = true);
-        s_requests[_gameNum].randomWords[0] = Games[_gameNum].randomNum;
+        uint256 _requestId = Games[_gameNum].randomId;
+        Games[_gameNum].randomNum = s_requests[_requestId].randomWords[0];
+        /*
         Games[_gameNum].roll = Games[_gameNum].randomNum.mod(100);
-
-    /*
          if (Games[_gameNum].roll >= 50) {
             Games[_gameNum].winningSide = "Tails";
         } else {
@@ -122,8 +122,14 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
     }
 
     function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
-        require(s_requests[_requestId].exists, 'request not found');
+        require(s_requests[_requestId].exists, 'Request not found');
         s_requests[_requestId].fulfilled = true;
         s_requests[_requestId].randomWords = _randomWords;
+    }
+
+    function getRequestStatus(uint256 _requestId) external view returns (bool fulfilled, uint256[] memory randomWords) {
+        require(s_requests[_requestId].exists, 'Request not found');
+        RequestStatus memory request = s_requests[_requestId];
+        return (request.fulfilled, request.randomWords);
     }
 } 
