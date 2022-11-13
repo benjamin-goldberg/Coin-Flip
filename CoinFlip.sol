@@ -11,6 +11,15 @@ import './ConfirmedOwner.sol';
 
 contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
 
+    struct RequestStatus {
+        bool fulfilled;
+        bool exists;
+        uint256[] randomNum;
+        uint gameNum;
+        uint requestId;
+    }
+    RequestStatus[] public Requests;
+    
     VRFCoordinatorV2Interface COORDINATOR;
 
     uint64 s_subscriptionId;
@@ -39,6 +48,7 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
             callbackGasLimit,
             numWords
         );
+        Requests.push(RequestStatus(false, true, new uint256[](0), _gameNum, requestId));
         Games[_gameNum].randomId = requestId;
         Games[_gameNum].randomIdExists = true;
         return requestId;
@@ -46,7 +56,8 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
 
     function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
         require(Games[_requestId].randomIdExists = true, 'Request not found');
-        Games[_requestId].randomNum = _randomWords;
+        Requests[_requestId].fulfilled = true;
+        Requests[_requestId].randomNum = _randomWords;
     }
 
     using SafeMath for uint;
