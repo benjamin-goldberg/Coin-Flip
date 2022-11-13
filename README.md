@@ -1,3 +1,3 @@
 # Coin Flip
  
-Goerli - https://goerli.etherscan.io/address/0x3d94cfd3e6e763be2ae066907cd8c5fd192ae20a
+AVAX Fuji - https://testnet.snowtrace.io/address/0x721cce602268991469559ce9f797d2aa760be8f0
