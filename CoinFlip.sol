@@ -90,6 +90,8 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
     function flipGame(uint32 _gameNum) external {
         require(s_requests[_gameNum].fulfilled = true);
         s_requests[_gameNum].randomWords = Games[_gameNum].randomNum;
+        
+    /*    
         Games[_gameNum].roll = Games[_gameNum].randomNum[0].mod(100);
          if (Games[_gameNum].roll >= 50) {
             Games[_gameNum].winningSide = "Tails";
@@ -102,7 +104,7 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
         } else {
             payable(Games[_gameNum].player2).transfer(Games[_gameNum].stake.mul(98).div(100));
             Games[_gameNum].winner = Games[_gameNum].player2;
-        }
+        }*/
     }
 
     function _requestRandomWords(uint32 _gameNum) internal returns (uint256 requestId) {
