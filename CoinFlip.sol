@@ -11,6 +11,17 @@ import './ConfirmedOwner.sol';
 
 contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
 
+struct RequestStatus {
+        bool fulfilled; // whether the request has been successfully fulfilled
+        bool exists; // whether a requestId exists
+        uint256[] randomWords;
+    }
+    mapping(uint256 => RequestStatus) public s_requests;
+
+
+
+
+/*
     struct RequestStatus {
         bool fulfilled;
         bool exists;
@@ -19,7 +30,7 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
         uint requestId;
     }
     RequestStatus[] public Requests;
-    
+  */  
     VRFCoordinatorV2Interface COORDINATOR;
 
     uint64 s_subscriptionId;
@@ -41,6 +52,38 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
     }
 
     function _requestRandomWords(uint _gameNum) internal returns (uint256 requestId) {
+        // Will revert if subscription is not set and funded.
+        requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            s_subscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
+        );
+        s_requests[requestId] = RequestStatus({randomWords: new uint256[](0), exists: true, fulfilled: false});
+        Games[_gameNum].randomIdExists = true;
+        return requestId;
+    }
+
+    function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
+        require(s_requests[_requestId].exists, 'request not found');
+        s_requests[_requestId].fulfilled = true;
+        s_requests[_requestId].randomWords = _randomWords;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+    function _requestRandomWords(uint _gameNum) internal returns (uint256 requestId) {
         requestId = COORDINATOR.requestRandomWords(
             keyHash,
             s_subscriptionId,
@@ -58,7 +101,7 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
         Requests[_requestId].fulfilled = true;
         Requests[_requestId].randomNum = _randomWords;
     }
-
+*/
     using SafeMath for uint;
 
     uint startingGame = 0;
