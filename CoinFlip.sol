@@ -14,7 +14,7 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
     VRFCoordinatorV2Interface COORDINATOR;
 
     uint64 s_subscriptionId;
-    bytes32 keyHash = 0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696;
+    bytes32 keyHash = 0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
     uint32 callbackGasLimit = 300000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 1;
