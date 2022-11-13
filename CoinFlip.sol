@@ -47,7 +47,6 @@ contract CoinFlip is Ownable, VRFConsumerBaseV2, ConfirmedOwner {
     function fulfillRandomWords(uint256 _requestId, uint256[] memory _randomWords) internal override {
         require(Games[_requestId].randomIdExists = true, 'Request not found');
         Games[_requestId].randomNum = _randomWords;
-        Games[_requestId].randomFulfilled = true;
     }
 
     using SafeMath for uint;
