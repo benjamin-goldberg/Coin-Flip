@@ -27,7 +27,7 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
         string winningSide;
         uint256 randomId;
         bool randomIdExists;
-        uint256[] randomNum;
+        uint256 randomNum;
         uint256 roll;
     }
     Game[] public Games;
@@ -69,7 +69,7 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
         require(msg.value >= 0.5 ether, "Too small of an amount.");
         require(msg.value <= 10000 ether, "Too large of an amount.");
         require(uint(keccak256(abi.encodePacked(_HeadsOrTails))) == uint(keccak256(abi.encodePacked("Heads"))) || uint(keccak256(abi.encodePacked("Tails"))) == uint(keccak256(abi.encodePacked(_HeadsOrTails))), "You must pick Heads or Tails.");
-        Games.push(Game(startingGame, msg.sender, _HeadsOrTails, msg.value, 0x0000000000000000000000000000000000000000, "", false, 0x0000000000000000000000000000000000000000, "", 0, false, new uint256[](0), 0));
+        Games.push(Game(startingGame, msg.sender, _HeadsOrTails, msg.value, 0x0000000000000000000000000000000000000000, "", false, 0x0000000000000000000000000000000000000000, "", 0, false, 0, 0));
         startingGame.add(1);
     }
 
@@ -89,8 +89,8 @@ contract CoinFlip is VRFConsumerBaseV2, ConfirmedOwner {
 
     function flipGame(uint32 _gameNum) external {
         require(s_requests[_gameNum].fulfilled = true);
-        s_requests[_gameNum].randomWords = Games[_gameNum].randomNum;
-        Games[_gameNum].roll = Games[_gameNum].randomNum[0].mod(100);
+        s_requests[_gameNum].randomWords[0] = Games[_gameNum].randomNum;
+        Games[_gameNum].roll = Games[_gameNum].randomNum.mod(100);
 
     /*
          if (Games[_gameNum].roll >= 50) {
